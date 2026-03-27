@@ -1,0 +1,20 @@
+Source: firstapp
+Section: utils
+Priority: optional
+Maintainer: Cole Gundermann <cole@example.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-python,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-setuptools
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: firstapp
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends}
+Description: Bootstrap a starter project directory
+ A small command line utility that creates a basic project structure.

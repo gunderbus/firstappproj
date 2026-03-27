@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+*.deb
+*.build
+*.buildinfo
+*.changes
+debian/.debhelper/
+debian/files
+debian/firstapp/
