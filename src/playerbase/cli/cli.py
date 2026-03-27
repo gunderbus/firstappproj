@@ -14,6 +14,7 @@ dist/
 build/
 """
 
+# Prebuilt shit idek atp dog
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -113,3 +114,6 @@ def main(argv: list[str] | None = None) -> int:
 
     parser.error("Unknown command")
     return 2
+
+# Now we finna get to the good part
+
