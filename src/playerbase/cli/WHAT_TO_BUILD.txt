@@ -1,0 +1,20 @@
+Use this folder for the terminal interface that players will run.
+
+What to code here later:
+- login command
+- logout command
+- whoami command
+- rankings command
+- recent-scores command
+- repo link/unlink commands
+
+This code should:
+- parse terminal arguments
+- call backend APIs
+- store auth tokens locally
+- print clean user-facing output
+
+This code should not:
+- contain database logic
+- contain GitHub webhook logic
+- contain AI scoring logic

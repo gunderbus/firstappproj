@@ -1,0 +1,17 @@
+Use this folder for background jobs and asynchronous processing.
+
+What to code here later:
+- webhook-triggered scoring jobs
+- repo checkout/fetch jobs
+- leaderboard refresh jobs
+- retry/error handling for failed jobs
+
+Typical job flow:
+- receive commit event
+- load linked player and repo
+- fetch the specific commit
+- run scoring
+- save the result
+- update rankings
+
+This folder should coordinate long-running tasks so the API stays fast.

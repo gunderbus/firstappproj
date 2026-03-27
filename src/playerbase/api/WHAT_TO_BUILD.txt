@@ -1,0 +1,20 @@
+Use this folder for the backend HTTP API.
+
+What to code here later:
+- auth endpoints
+- player profile endpoints
+- rankings endpoints
+- repo linking endpoints
+- GitHub webhook endpoint
+
+This layer should:
+- validate requests
+- authenticate users
+- call services from core/db/scoring layers
+- return JSON responses
+
+Suggested responsibilities:
+- app setup
+- route definitions
+- request/response schemas
+- dependency wiring

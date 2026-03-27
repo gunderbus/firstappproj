@@ -1,0 +1,16 @@
+This is the future main package for the project.
+
+What this package should represent:
+- the player platform itself
+- not just a one-off CLI script
+
+The code in here should be split by responsibility:
+- cli for terminal commands
+- api for backend routes
+- core for shared types and service boundaries
+- db for persistence
+- integrations for GitHub and git interactions
+- scoring for commit evaluation
+- workers for background job execution
+
+Keep high-level business concepts here and avoid dumping everything into one file.

@@ -1,0 +1,10 @@
+Use this folder for helper scripts that developers run manually.
+
+What to code here later:
+- local dev startup scripts
+- database reset/setup scripts
+- seed-data scripts for test players and scores
+- packaging/release scripts
+- maintenance scripts for cleaning old scoring jobs
+
+Keep app logic out of this folder. These should be operational helpers, not core business code.

@@ -1,0 +1,16 @@
+Use this folder for shared domain concepts and interface-style contracts.
+
+What to code here later:
+- shared config models
+- enums and constants
+- service protocols or abstract base classes
+- domain-level validation rules
+
+Examples of interfaces to define here:
+- AuthService
+- RankingService
+- GitService
+- CommitScorer
+- WebhookVerifier
+
+This folder should stay lightweight and reusable across CLI, API, and workers.

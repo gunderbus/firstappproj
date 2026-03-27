@@ -1,0 +1,15 @@
+Use this folder for commit evaluation and scoring logic.
+
+What to code here later:
+- scoring interface/protocol
+- local AI scorer implementation
+- prompt templates or scoring rules
+- result formatting and explanation generation
+
+This folder should answer:
+- how a commit is checked
+- how a numeric score is produced
+- how feedback is generated for the player
+
+Important future concern:
+- do not execute untrusted player code here without sandboxing

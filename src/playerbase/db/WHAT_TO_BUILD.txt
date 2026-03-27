@@ -1,0 +1,17 @@
+Use this folder for persistence and database-related code.
+
+What to code here later:
+- database connection setup
+- ORM models or table definitions
+- migrations
+- repository/data-access classes
+
+Main entities to model:
+- players
+- linked accounts
+- repos
+- commit scores
+- ranking snapshots
+- job records if you track background work
+
+Keep raw database concerns here rather than mixing them into API handlers.

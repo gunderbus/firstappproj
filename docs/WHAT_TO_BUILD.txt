@@ -1,0 +1,15 @@
+Use this folder for project-level documentation before you write much code.
+
+What to put here:
+- Architecture overview of CLI, API server, worker, database, and GitHub webhook flow
+- API endpoint notes
+- Database schema sketches
+- Deployment notes for the game server and AI worker
+- Security notes for sandboxing untrusted code
+
+Suggested files later:
+- architecture.md
+- api.md
+- schema.md
+- deployment.md
+- security.md

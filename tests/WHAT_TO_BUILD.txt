@@ -1,0 +1,15 @@
+Use this folder for automated tests.
+
+What to code here later:
+- CLI tests for login, whoami, rankings, and repo-link commands
+- API tests for auth, player lookup, rankings, and webhook handling
+- database tests for saving players, repos, commits, and scores
+- scoring tests for AI evaluation logic
+- integration tests for the full push -> webhook -> score -> ranking flow
+
+Suggested test groups later:
+- test_cli.py
+- test_api.py
+- test_db.py
+- test_scoring.py
+- test_webhooks.py

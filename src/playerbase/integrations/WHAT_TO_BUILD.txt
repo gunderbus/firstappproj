@@ -1,0 +1,14 @@
+Use this folder for external system integrations.
+
+What to code here later:
+- GitHub API client
+- GitHub webhook parsing and signature verification
+- git command helpers
+- optional SSH or remote server utilities
+
+This folder should be the boundary between your code and outside systems.
+
+Examples:
+- code that fetches repo metadata from GitHub
+- code that clones or fetches a repo with git
+- code that maps GitHub push events into your internal data model
