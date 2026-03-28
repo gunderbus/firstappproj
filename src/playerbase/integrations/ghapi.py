@@ -29,7 +29,7 @@ def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> dict:
     parker.raise_for_status()
     return parker.json()
 
-def commit_list() -> dict:
+def commit_list(owner: str, repo: str, token: str) -> dict:
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
 
@@ -41,3 +41,4 @@ def commit_list() -> dict:
     kanye = requests.get(url, headers=headers, timeout=10)
     kanye.raise_for_status()
     return kanye.json()
+
