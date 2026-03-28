@@ -1,44 +1,85 @@
+from pathlib import Path
+import os
+import subprocess
+from typing import Dict, List
+
 import requests
 
-def get_repo(owner: str, repo: str, token: str) -> dict:
+
+def _github_headers(token: str) -> Dict[str, str]:
+    return {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+    }
+
+
+def get_repo(owner: str, repo: str, token: str) -> Dict:
     url = f"https://api.github.com/repos/{owner}/{repo}"
 
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {token}",
-    }
-
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=_github_headers(token), timeout=10)
         response.raise_for_status()
         return response.json()
-    except:
-        print("Unable to access github to get the repo, check code and token.")
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            f"Unable to access GitHub repo {owner}/{repo}. Check the repo name and token."
+        ) from exc
 
-def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> dict:
-     # work here    
 
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}
+def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> Dict:
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}"
 
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {token}",
-    }
-    
-    parker = requests.get(url, headers=headers, timeout=10)
-    parker.raise_for_status()
-    return parker.json()
+    try:
+        response = requests.get(url, headers=_github_headers(token), timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            f"Unable to access commit {commit_sha} for {owner}/{repo}."
+        ) from exc
 
-def commit_list(owner: str, repo: str, token: str) -> dict:
 
+def commit_list(owner: str, repo: str, token: str) -> List[Dict]:
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
 
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {token}",
-    }
+    try:
+        response = requests.get(url, headers=_github_headers(token), timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as exc:
+        raise RuntimeError(f"Unable to list commits for {owner}/{repo}.") from exc
 
-    kanye = requests.get(url, headers=headers, timeout=10)
-    kanye.raise_for_status()
-    return kanye.json()
 
+def clone_repo_to_path(owner: str, repo: str, token: str, path: str) -> Path:
+    destination = Path(path).expanduser().resolve()
+    clone_url = f"https://github.com/{owner}/{repo}.git"
+
+    if destination.exists() and not destination.is_dir():
+        raise ValueError(f"Destination exists but is not a directory: {destination}")
+
+    if destination.exists() and any(destination.iterdir()):
+        raise ValueError(f"Destination already exists and is not empty: {destination}")
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    env = os.environ.copy()
+    env["GIT_CONFIG_COUNT"] = "1"
+    env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
+    env["GIT_CONFIG_VALUE_0"] = f"Authorization: Bearer {token}"
+
+    try:
+        subprocess.run(
+            ["git", "clone", clone_url, str(destination)],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError("`git` is not installed or not available on PATH.") from exc
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(
+            f"Failed to clone {owner}/{repo} into {destination}: {exc.stderr.strip()}"
+        ) from exc
+
+    return destination
