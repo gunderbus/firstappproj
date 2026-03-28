@@ -115,5 +115,4 @@ def main(argv: list[str] | None = None) -> int:
     parser.error("Unknown command")
     return 2
 
-# Now we finna get to the good part
 

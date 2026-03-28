@@ -12,6 +12,18 @@ def _github_headers(token: str) -> Dict[str, str]:
         "Authorization": f"Bearer {token}",
     }
 
+def get_display_name(username: str, token: str) -> str:
+    url = f"https://api.github.com/users/{username}"
+    try:
+        response = requests.get(url, headers=_github_headers(token), timeout=10)
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            f"Unable to get display name for GitHub user {username}."
+        ) from exc
+
+    data = response.json()
+    return data.get("name") or data.get("login") or username
 
 def get_repo(owner: str, repo: str, token: str) -> Dict:
     url = f"https://api.github.com/repos/{owner}/{repo}"
