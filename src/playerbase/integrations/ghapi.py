@@ -32,3 +32,12 @@ def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> dict:
 def commit_list() -> dict:
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+    }
+
+    kanye = requests.get(url, headers=headers, timeout=10)
+    kanye.raise_for_status()
+    return kanye.json()
