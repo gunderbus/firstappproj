@@ -28,3 +28,7 @@ def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> dict:
     parker = requests.get(url, headers=headers, timeout=10)
     parker.raise_for_status()
     return parker.json()
+
+def commit_list() -> dict:
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
