@@ -3,6 +3,9 @@ import os
 import subprocess
 from typing import Dict, List
 
+from playerbase.db import commit
+from playerbase.db import repo
+
 import requests
 
 
