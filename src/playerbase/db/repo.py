@@ -24,7 +24,7 @@ class Repo:
         if self.full_name is not None:
             return
 
-        payload = ghapi.get_repo(self.owner, self.name, self.token)
+        payload = ghapi.get_repo_payload(self.owner, self.name, self.token)
         hydrated_repo = self.from_api_payload(
             owner=self.owner,
             name=self.name,

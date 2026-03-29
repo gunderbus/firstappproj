@@ -1,10 +1,7 @@
 from pathlib import Path
 import os
 import subprocess
-from typing import Dict, List
-
-from playerbase.db import commit
-from playerbase.db import repo
+from typing import Any, Dict, List
 
 import requests
 
@@ -28,7 +25,8 @@ def get_display_name(username: str, token: str) -> str:
     data = response.json()
     return data.get("name") or data.get("login") or username
 
-def get_repo(owner: str, repo: str, token: str) -> Dict:
+
+def get_repo_payload(owner: str, repo: str, token: str) -> Dict[str, Any]:
     url = f"https://api.github.com/repos/{owner}/{repo}"
 
     try:
@@ -41,7 +39,19 @@ def get_repo(owner: str, repo: str, token: str) -> Dict:
         ) from exc
 
 
-def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> Dict:
+def get_repo(owner: str, repo: str, token: str):
+    from playerbase.db.repo import Repo
+
+    payload = get_repo_payload(owner, repo, token)
+    return Repo.from_api_payload(
+        owner=owner,
+        name=repo,
+        token=token,
+        payload=payload,
+    )
+
+
+def get_commit_payload(owner: str, repo: str, commit_sha: str, token: str) -> Dict:
     url = f"https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}"
 
     try:
@@ -52,6 +62,17 @@ def get_commit(owner: str, repo: str, commit_sha: str, token: str) -> Dict:
         raise RuntimeError(
             f"Unable to access commit {commit_sha} for {owner}/{repo}."
         ) from exc
+
+def get_commit(owner: str, repo: str, commit_sha: str, token: str):
+    from playerbase.db.commit import Commit
+
+    payload = get_commit_payload(owner, repo, commit_sha, token)
+    return Commit.from_api_payload(
+        owner=owner,
+        repo=repo,
+        token=token,
+        payload=payload,
+    )
 
 
 def commit_list(owner: str, repo: str, token: str) -> List[Dict]:
