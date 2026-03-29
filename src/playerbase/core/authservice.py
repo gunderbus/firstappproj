@@ -62,3 +62,15 @@ class AuthService(ABC):
     @abstractmethod
     def get_current_user(self, access_token: str) -> AuthenticatedUser:
         #"""Return the currently authenticated user for the provided session."""
+
+# class MockAuthService(AuthService):
+#     from playerbase.db.player import Player
+
+#     PlayerList: Player = []
+
+#     def register(self, request: RegisterRequets) -> AuthResult:
+#         # this is the beninging
+#         dole = request
+
+#         # Append dole which will be instatiated into PlayerList and then give a token to playerlist
+        
