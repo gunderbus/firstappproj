@@ -44,6 +44,17 @@ class Repo:
         self.open_issues_count = hydrated_repo.open_issues_count
 
     @classmethod
+    def fetch(cls, owner: str, name: str, token: str, db_id: Optional[int] = None) -> "Repo":
+        payload = ghapi.get_repo_payload(owner, name, token)
+        return cls.from_api_payload(
+            owner=owner,
+            name=name,
+            token=token,
+            payload=payload,
+            db_id=db_id,
+        )
+
+    @classmethod
     def from_api_payload(
         cls,
         owner: str,
@@ -67,6 +78,24 @@ class Repo:
             forks_count=payload.get("forks_count", 0),
             open_issues_count=payload.get("open_issues_count", 0),
         )
+
+    def refresh(self) -> "Repo":
+        refreshed = self.fetch(
+            owner=self.owner,
+            name=self.name,
+            token=self.token,
+            db_id=self._id,
+        )
+        self.full_name = refreshed.full_name
+        self.description = refreshed.description
+        self.html_url = refreshed.html_url
+        self.default_branch = refreshed.default_branch
+        self.language = refreshed.language
+        self.visibility = refreshed.visibility
+        self.stargazers_count = refreshed.stargazers_count
+        self.forks_count = refreshed.forks_count
+        self.open_issues_count = refreshed.open_issues_count
+        return self
 
     def get_id(self) -> Optional[int]:
         return self._id
@@ -106,6 +135,3 @@ class Repo:
 
     def get_open_issues_count(self) -> int:
         return self.open_issues_count
-
-
-repo = Repo

@@ -45,6 +45,24 @@ class Commit:
         self.changed_files = hydrated_commit.changed_files
 
     @classmethod
+    def fetch(
+        cls,
+        owner: str,
+        repo: str,
+        sha: str,
+        token: str,
+        db_id: Optional[int] = None,
+    ) -> "Commit":
+        payload = ghapi.get_commit(owner, repo, sha, token)
+        return cls.from_api_payload(
+            owner=owner,
+            repo=repo,
+            token=token,
+            payload=payload,
+            db_id=db_id,
+        )
+
+    @classmethod
     def from_api_payload(
         cls,
         owner: str,
@@ -127,3 +145,22 @@ class Commit:
 
     def get_changed_files(self) -> List[str]:
         return list(self.changed_files)
+
+    def refresh(self) -> "Commit":
+        refreshed = self.fetch(
+            owner=self.owner,
+            repo=self.repo,
+            sha=self.sha,
+            token=self.token,
+            db_id=self._id,
+        )
+        self.message = refreshed.message
+        self.author_name = refreshed.author_name
+        self.author_login = refreshed.author_login
+        self.committed_at = refreshed.committed_at
+        self.html_url = refreshed.html_url
+        self.additions = refreshed.additions
+        self.deletions = refreshed.deletions
+        self.total_changes = refreshed.total_changes
+        self.changed_files = refreshed.changed_files
+        return self
