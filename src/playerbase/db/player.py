@@ -16,6 +16,14 @@ class Player:
     def __post_init__(self) -> None:
         if self.dispname is None:
             self.dispname = ghapi.get_display_name(self.username, self.token)
+    
+    def __init__(self, 
+    username: str, 
+    token: str, 
+    db_id: Optional[int] = None):
+        self.username = username
+        self.token = token
+        self._id = db_id
 
     @classmethod
     def from_github(cls, username: str, token: str, db_id: Optional[int] = None) -> "Player":
