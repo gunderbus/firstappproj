@@ -63,7 +63,7 @@ class Player:
     def get_refreshtoken(self) -> str:
         return self.refreshtoken
 
-    def set_refreshtoken(self, token: str):\
+    def set_refreshtoken(self, token: str) -> None:
         self.refreshtoken = token
 
     def get_id(self) -> Optional[int]:

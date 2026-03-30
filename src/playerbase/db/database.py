@@ -94,8 +94,10 @@ class InMemoryDatabaseService(DatabaseService):
         return None
 
     def get_player_by_refreshtoken(self, token: str) -> Optional[Player]:
-        for player  in self._players.values():
-            if player.get
+        for player in self._players.values():
+            if player.get_refreshtoken() == token:
+                return player
+        return None
 
     def append_to_repolist(self, repo: Repo) -> Repo:
         repo_key = repo.get_full_name() or f"{repo.get_owner()}/{repo.get_name()}"

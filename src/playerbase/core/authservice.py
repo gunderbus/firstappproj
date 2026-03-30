@@ -90,6 +90,7 @@ class MockAuthService(AuthService):
             dispname=request.username,
         )
         player.set_display_name(request.username)
+        player.set_refreshtoken(refresh_token)
         self.database.append_to_playerlist(player)
 
         return AuthResult(
@@ -115,6 +116,7 @@ class MockAuthService(AuthService):
             raise ValueError("The entered username or password is not correct.")
 
         player.set_token(access_token)
+        player.set_refreshtoken(refresh_token)
         self.database.set_status(player.get_username(), True)
 
         return AuthResult(
@@ -139,15 +141,31 @@ class MockAuthService(AuthService):
         player.set_token("")
 
     def refresh_session(self, refresh_token: str) -> AuthTokens:
-        # raise NotImplementedError("MockAuthService.refresh_session is not implemented yet.")
-        
+        player = self.database.get_player_by_refreshtoken(refresh_token)
+        if player is None:
+            raise ValueError("Invalid refresh token.")
+
+        access_token = f"mock-access-{uuid4().hex}"
+        next_refresh_token = f"mock-refresh-{uuid4().hex}"
+        player.set_token(access_token)
+        player.set_refreshtoken(next_refresh_token)
+        self.database.set_status(player.get_username(), True)
+
+        return AuthTokens(
+            access_token=access_token,
+            refresh_token=next_refresh_token,
+        )
 
     def validate_access_token(self, access_token: str) -> AuthenticatedUser:
-        raise NotImplementedError(
-            "MockAuthService.validate_access_token is not implemented yet."
+        player = self.database.get_player_by_token(access_token)
+        if player is None:
+            raise ValueError("Invalid access token.")
+
+        return AuthenticatedUser(
+            user_id=str(player.get_id()),
+            username=player.get_username(),
+            display_name=player.get_display_name(),
         )
 
     def get_current_user(self, access_token: str) -> AuthenticatedUser:
-        raise NotImplementedError(
-            "MockAuthService.get_current_user is not implemented yet."
-        )
+        return self.validate_access_token(access_token)

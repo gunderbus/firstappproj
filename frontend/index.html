@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playerbase</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero">
+        <p class="eyebrow">Playerbase frontend</p>
+        <h1>Connect your browser to the backend that’s in this repo.</h1>
+        <p class="hero-copy">
+          This page talks to the local Python API for register, login, logout,
+          and current-user lookup.
+        </p>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <h2>Register</h2>
+          <form id="register-form" class="stack">
+            <label>
+              <span>Username</span>
+              <input name="username" type="text" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" />
+            </label>
+            <button type="submit">Create account</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>Login</h2>
+          <form id="login-form" class="stack">
+            <label>
+              <span>Username</span>
+              <input name="username" type="text" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" required />
+            </label>
+            <button type="submit">Login</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>Session</h2>
+          <div class="stack">
+            <button id="me-button" type="button">Get current user</button>
+            <button id="logout-button" type="button">Logout</button>
+            <p class="token-label">Stored access token</p>
+            <code id="token-output">None</code>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel response-panel">
+        <div class="response-header">
+          <h2>API response</h2>
+          <span id="status-badge" class="status-badge">Idle</span>
+        </div>
+        <pre id="response-output">Waiting for an action…</pre>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

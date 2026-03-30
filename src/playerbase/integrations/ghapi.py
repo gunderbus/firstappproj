@@ -1,9 +1,9 @@
 from pathlib import Path
+import json
 import os
 import subprocess
 from typing import Any, Dict, List
-
-import requests
+from urllib import error, request
 
 
 def _github_headers(token: str) -> Dict[str, str]:
@@ -15,25 +15,30 @@ def _github_headers(token: str) -> Dict[str, str]:
 def get_display_name(username: str, token: str) -> str:
     url = f"https://api.github.com/users/{username}"
     try:
-        response = requests.get(url, headers=_github_headers(token), timeout=10)
-        response.raise_for_status()
-    except requests.RequestException as exc:
+        payload = _get_json(url, token)
+    except RuntimeError as exc:
         raise RuntimeError(
             f"Unable to get display name for GitHub user {username}."
         ) from exc
 
-    data = response.json()
-    return data.get("name") or data.get("login") or username
+    return payload.get("name") or payload.get("login") or username
+
+
+def _get_json(url: str, token: str) -> Dict[str, Any]:
+    req = request.Request(url, headers=_github_headers(token))
+    try:
+        with request.urlopen(req, timeout=10) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except (error.URLError, error.HTTPError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"Unable to fetch JSON from {url}.") from exc
 
 
 def get_repo_payload(owner: str, repo: str, token: str) -> Dict[str, Any]:
     url = f"https://api.github.com/repos/{owner}/{repo}"
 
     try:
-        response = requests.get(url, headers=_github_headers(token), timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as exc:
+        return _get_json(url, token)
+    except RuntimeError as exc:
         raise RuntimeError(
             f"Unable to access GitHub repo {owner}/{repo}. Check the repo name and token."
         ) from exc
@@ -55,10 +60,8 @@ def get_commit_payload(owner: str, repo: str, commit_sha: str, token: str) -> Di
     url = f"https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}"
 
     try:
-        response = requests.get(url, headers=_github_headers(token), timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as exc:
+        return _get_json(url, token)
+    except RuntimeError as exc:
         raise RuntimeError(
             f"Unable to access commit {commit_sha} for {owner}/{repo}."
         ) from exc
@@ -79,10 +82,9 @@ def commit_list(owner: str, repo: str, token: str) -> List[Dict]:
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
 
     try:
-        response = requests.get(url, headers=_github_headers(token), timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as exc:
+        payload = _get_json(url, token)
+        return payload if isinstance(payload, list) else []
+    except RuntimeError as exc:
         raise RuntimeError(f"Unable to list commits for {owner}/{repo}.") from exc
 
 
