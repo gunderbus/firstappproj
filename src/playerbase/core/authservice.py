@@ -104,7 +104,29 @@ class MockAuthService(AuthService):
         )
 
     def login(self, request: LoginRequest) -> AuthResult:
-        raise NotImplementedError("MockAuthService.login is not implemented yet.")
+        access_token = f"mock-access-{uuid4().hex}"
+        refresh_token = f"mock-refresh-{uuid4().hex}"
+        player = self.database.get_player_by_username(request.username)
+        if player is None:
+            raise ValueError(f"Player does not exist: {request.username}")
+
+        if player.get_password() != request.password:
+            raise ValueError("The entered username or password is not correct.")
+
+        player.set_token(access_token)
+
+        return AuthResult(
+            user=AuthenticatedUser(
+                user_id=str(player.get_id()),
+                username=player.get_username(),
+                display_name=player.get_display_name(),
+            ),
+            tokens=AuthTokens(
+                access_token=access_token,
+                refresh_token=refresh_token,
+            ),
+        )
+
 
     def logout(self, access_token: str) -> None:
         raise NotImplementedError("MockAuthService.logout is not implemented yet.")

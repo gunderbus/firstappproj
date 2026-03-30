@@ -58,6 +58,9 @@ class Player:
     def get_token(self) -> str:
         return self.token
 
+    def set_token(self, token: str) -> None:
+        self.token = token
+
     def get_display_name(self) -> str:
         return self.dispname or self.username
 
