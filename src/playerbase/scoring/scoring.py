@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 import sys
 from typing import Any, Optional
 
@@ -38,14 +39,21 @@ def _load_dspy() -> Any:
 
 
 def configure_dspy(
-    model: str = "openai/gpt-5-mini",
+    model: str = "ollama_chat/llama3",
     api_key: Optional[str] = None,
     api_base: Optional[str] = None,
 ) -> Any:
     dspy = _load_dspy()
 
+    model = os.getenv("PLAYERBASE_DSPY_MODEL", model)
+    api_base = api_base or os.getenv("PLAYERBASE_DSPY_API_BASE")
+    api_key = api_key or os.getenv("PLAYERBASE_DSPY_API_KEY")
+
+    if model.startswith("ollama") and not api_base:
+        api_base = "http://localhost:11434"
+
     lm_kwargs = {}
-    if api_key:
+    if api_key is not None:
         lm_kwargs["api_key"] = api_key
     if api_base:
         lm_kwargs["api_base"] = api_base
@@ -58,7 +66,7 @@ def configure_dspy(
 class DSPyCommitScorer:
     def __init__(
         self,
-        model: str = "openai/gpt-5-mini",
+        model: str = "ollama_chat/llama3",
         api_key: Optional[str] = None,
         api_base: Optional[str] = None,
     ) -> None:
