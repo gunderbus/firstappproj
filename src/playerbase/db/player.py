@@ -9,6 +9,7 @@ class Player:
     username: str
     password: str
     token: str
+    refreshtoken: str = ""
     status: bool = False
     _id: Optional[int] = None
     dispname: Optional[str] = field(default=None)
@@ -58,6 +59,12 @@ class Player:
 
     def set_status(self, stat: bool):
         self.status = stat
+
+    def get_refreshtoken(self) -> str:
+        return self.refreshtoken
+
+    def set_refreshtoken(self, token: str):\
+        self.refreshtoken = token
 
     def get_id(self) -> Optional[int]:
         return self._id

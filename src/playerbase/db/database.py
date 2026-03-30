@@ -30,6 +30,10 @@ class DatabaseService(ABC):
         """Return one player by username."""
 
     @abstractmethod
+    def get_player_by_token(self, token: str) -> Optional[Player]:
+        """Return one player by access token."""
+
+    @abstractmethod
     def append_to_repolist(self, repo: Repo) -> Repo:
         """Store a repo record."""
 
@@ -82,6 +86,16 @@ class InMemoryDatabaseService(DatabaseService):
 
     def get_player_by_username(self, username: str) -> Optional[Player]:
         return self._players.get(username)
+
+    def get_player_by_token(self, token: str) -> Optional[Player]:
+        for player in self._players.values():
+            if player.get_token() == token:
+                return player
+        return None
+
+    def get_player_by_refreshtoken(self, token: str) -> Optional[Player]:
+        for player  in self._players.values():
+            if player.get
 
     def append_to_repolist(self, repo: Repo) -> Repo:
         repo_key = repo.get_full_name() or f"{repo.get_owner()}/{repo.get_name()}"

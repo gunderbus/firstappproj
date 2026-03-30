@@ -131,10 +131,16 @@ class MockAuthService(AuthService):
 
 
     def logout(self, access_token: str) -> None:
-        raise NotImplementedError("MockAuthService.logout is not implemented yet.")
+        player = self.database.get_player_by_token(access_token)
+        if player is None:
+            raise ValueError("No logged-in player found for that access token.")
+
+        self.database.set_status(player.get_username(), False)
+        player.set_token("")
 
     def refresh_session(self, refresh_token: str) -> AuthTokens:
-        raise NotImplementedError("MockAuthService.refresh_session is not implemented yet.")
+        # raise NotImplementedError("MockAuthService.refresh_session is not implemented yet.")
+        
 
     def validate_access_token(self, access_token: str) -> AuthenticatedUser:
         raise NotImplementedError(
