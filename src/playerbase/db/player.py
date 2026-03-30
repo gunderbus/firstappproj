@@ -9,6 +9,7 @@ class Player:
     username: str
     password: str
     token: str
+    status: bool = False
     _id: Optional[int] = None
     dispname: Optional[str] = field(default=None)
     score: int = 0
@@ -19,12 +20,14 @@ class Player:
         username: str,
         password: str,
         token: str,
+        status: bool = False,
         db_id: Optional[int] = None,
         dispname: Optional[str] = None,
     ):
         self.username = username
         self.password = password
         self.token = token
+        self.status = status
         self._id = db_id
         self.dispname = dispname
         self.score = 0
@@ -39,9 +42,22 @@ class Player:
         username: str,
         password: str,
         token: str,
+        status: bool = False,
         db_id: Optional[int] = None,
     ) -> "Player":
-        return cls(username=username, password=password, token=token, db_id=db_id)
+        return cls(
+            username=username,
+            password=password,
+            token=token,
+            status=status,
+            db_id=db_id,
+        )
+
+    def get_status(self) -> bool:
+        return self.status
+
+    def set_status(self, stat: bool):
+        self.status = stat
 
     def get_id(self) -> Optional[int]:
         return self._id

@@ -10,6 +10,14 @@ from playerbase.db.repo import Repo
 
 class DatabaseService(ABC):
     @abstractmethod
+    def set_status(self, username: str, status: bool) -> Player:
+        """Sets the login status of a player"""
+
+    @abstractmethod
+    def get_status(self, username: str) -> bool:
+        """Gets the login status of a player"""
+
+    @abstractmethod
     def append_to_playerlist(self, player: Player) -> Player:
         """Store a player record."""
 
@@ -51,6 +59,19 @@ class InMemoryDatabaseService(DatabaseService):
         self._players: Dict[str, Player] = {}
         self._repos: Dict[str, Repo] = {}
         self._commits: Dict[Tuple[str, str], Commit] = {}
+
+    def set_status(self, username: str, status: bool) -> Player:
+        player = self.get_player_by_username(username)
+        if player is None:
+            raise ValueError(f"Player does not exist: {username}")
+        player.set_status(status)
+        return player
+
+    def get_status(self, username: str) -> bool:
+        player = self.get_player_by_username(username)
+        if player is None:
+            raise ValueError(f"Player does not exist: {username}")
+        return player.get_status()
 
     def append_to_playerlist(self, player: Player) -> Player:
         self._players[player.get_username()] = player

@@ -85,6 +85,7 @@ class MockAuthService(AuthService):
             username=request.username,
             password=request.password,
             token=access_token,
+            status=True,
             db_id=player_id,
             dispname=request.username,
         )
@@ -114,6 +115,7 @@ class MockAuthService(AuthService):
             raise ValueError("The entered username or password is not correct.")
 
         player.set_token(access_token)
+        self.database.set_status(player.get_username(), True)
 
         return AuthResult(
             user=AuthenticatedUser(
