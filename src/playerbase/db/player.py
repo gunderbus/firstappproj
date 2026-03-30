@@ -7,33 +7,53 @@ from playerbase.integrations import ghapi
 @dataclass
 class Player:
     username: str
+    password: str
     token: str
     _id: Optional[int] = None
     dispname: Optional[str] = field(default=None)
     score: int = 0
     rank: str = "Rookie"
 
-    def __post_init__(self) -> None:
-        if self.dispname is None:
-            self.dispname = ghapi.get_display_name(self.username, self.token)
-    
-    def __init__(self, 
-    username: str, 
-    token: str, 
-    db_id: Optional[int] = None):
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        token: str,
+        db_id: Optional[int] = None,
+        dispname: Optional[str] = None,
+    ):
         self.username = username
+        self.password = password
         self.token = token
         self._id = db_id
+        self.dispname = dispname
+        self.score = 0
+        self.rank = "Rookie"
+
+        if self.dispname is None:
+            self.dispname = ghapi.get_display_name(self.username, self.token)
 
     @classmethod
-    def from_github(cls, username: str, token: str, db_id: Optional[int] = None) -> "Player":
-        return cls(username=username, token=token, _id=db_id)
+    def from_github(
+        cls,
+        username: str,
+        password: str,
+        token: str,
+        db_id: Optional[int] = None,
+    ) -> "Player":
+        return cls(username=username, password=password, token=token, db_id=db_id)
 
     def get_id(self) -> Optional[int]:
         return self._id
 
     def get_username(self) -> str:
         return self.username
+
+    def get_password(self) -> str:
+        return self.password
+
+    def set_password(self, password: str) -> None:
+        self.password = password
 
     def get_token(self) -> str:
         return self.token
